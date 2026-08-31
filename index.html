@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tehilim - Salmos del Rey David</title>
+<meta name="description" content="Los 150 Salmos y los Salmos de Qumrán: texto hebreo, fonética, traducción literal, cumplimiento profético en Yeshúa HaMashíaj. Ministerio Yeshúa — La Torá Viviente.">
+<meta name="theme-color" content="#0b1a30">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tehilim">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="app-bar">
+  <button id="btn-back" class="icon-btn" aria-label="Volver" hidden>
+    <svg viewBox="0 0 24 24"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </button>
+  <button id="btn-menu" class="icon-btn" aria-label="Menú">
+    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+  <h1 id="app-title">תְּהִלִּים <span>Tehilim</span></h1>
+  <button id="btn-search" class="icon-btn" aria-label="Buscar">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  </button>
+</header>
+
+<div id="search-bar" class="search-bar" hidden>
+  <input id="search-input" type="search" inputmode="search" placeholder="Buscar salmo por número o palabra…" autocomplete="off">
+</div>
+
+<nav id="side-menu" class="side-menu" hidden>
+  <div class="side-menu__backdrop" id="menu-backdrop"></div>
+  <div class="side-menu__panel">
+    <img src="img/logo.png" alt="Yeshúa — La Torá Viviente" class="side-menu__logo">
+    <ul>
+      <li><button data-view="home">Índice de Salmos</button></li>
+      <li><button data-view="front">Introducción</button></li>
+      <li><button data-view="back">Bibliografía y créditos</button></li>
+    </ul>
+    <p class="side-menu__footer">Editor: Yohanan Ben Israel<br><em>Am Israel Jai</em></p>
+  </div>
+</nav>
+
+<main id="app" tabindex="-1"></main>
+
+<footer class="offline-pill" id="offline-pill">Disponible sin conexión</footer>
+
+<script src="data/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
