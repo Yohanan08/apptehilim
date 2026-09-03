@@ -1,4 +1,4 @@
-var CACHE_NAME = 'tehilim-v1';
+var CACHE_NAME = 'tehilim-v3';
 var ASSETS = [
   './',
   './index.html',
