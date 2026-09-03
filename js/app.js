@@ -119,6 +119,7 @@
   function handleSpeak(btn) {
     if (!('speechSynthesis' in window)) return;
     var key = btn.getAttribute('data-key');
+    var lang = btn.getAttribute('data-lang') || 'es';
     var content = app.querySelector('.section-content[data-hlkey="' + key + '"]');
     if (!content) return;
     var synth = window.speechSynthesis;
@@ -127,9 +128,12 @@
     resetSpeakButtons();
     if (wasSpeaking) return;
     var texto = stripHtml(content.innerHTML);
+    // El Nombre sagrado (יהוה) se escribe en hebreo incluso dentro del texto en
+    // español/fonético; para la lectura en voz alta se dice "Adonai", como es costumbre.
+    texto = texto.replace(/יהוה/g, lang === 'he' ? 'אֲדֹנָי' : 'Adonai');
     if (!texto.trim()) return;
     var utter = new SpeechSynthesisUtterance(texto);
-    utter.lang = 'es-ES';
+    utter.lang = lang === 'he' ? 'he-IL' : 'es-ES';
     utter.rate = 0.95;
     utter.onend = function () { btn.classList.remove('speaking'); btn.textContent = '🔊 Escuchar'; };
     utter.onerror = function () { btn.classList.remove('speaking'); btn.textContent = '🔊 Escuchar'; };
@@ -306,7 +310,7 @@
         '<svg class="chev" viewBox="0 0 24 24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>' +
         '<div class="accordion__body ' + cls + '">' +
           '<div class="section-toolbar">' +
-            '<button type="button" class="mini-btn btn-speak" data-key="' + key + '">🔊 Escuchar</button>' +
+            '<button type="button" class="mini-btn btn-speak" data-key="' + key + '" data-lang="' + (sec.title === 'Texto Hebreo' ? 'he' : 'es') + '">🔊 Escuchar</button>' +
             '<button type="button" class="mini-btn btn-copy" data-key="' + key + '">📋 Copiar</button>' +
           '</div>' +
           '<div class="section-content" data-hlkey="' + key + '">' + bodyHtml + '</div>' +
