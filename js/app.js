@@ -76,6 +76,166 @@
   };
   var SECTION_OPEN_DEFAULT = { 'Texto Hebreo': true, 'Fonética Hebrea': true, 'Traducción Literal': true };
 
+  // ---------- Resaltado (guardado en el dispositivo) ----------
+  var HL_KEY = 'tehilim-highlights';
+  var HL = {};
+  try { HL = JSON.parse(localStorage.getItem(HL_KEY) || '{}'); } catch (e) { HL = {}; }
+  function saveHL() { try { localStorage.setItem(HL_KEY, JSON.stringify(HL)); } catch (e) {} }
+  function persistSection(key) {
+    if (!key) return;
+    var contentEl = app.querySelector('.section-content[data-hlkey="' + key + '"]');
+    if (!contentEl) return;
+    HL[key] = contentEl.innerHTML;
+    saveHL();
+  }
+  function closestClass(elm, className) {
+    while (elm && elm !== app && elm !== document.body) {
+      if (elm.classList && elm.classList.contains(className)) return elm;
+      elm = elm.parentElement;
+    }
+    return null;
+  }
+  function closestMarkHl(elm) {
+    while (elm && elm !== app && elm !== document.body) {
+      if (elm.tagName === 'MARK' && elm.classList.contains('hl')) return elm;
+      elm = elm.parentElement;
+    }
+    return null;
+  }
+  function findHlKey(elm) {
+    while (elm && elm !== document.body) {
+      if (elm.getAttribute && elm.getAttribute('data-hlkey')) return elm.getAttribute('data-hlkey');
+      elm = elm.parentElement;
+    }
+    return null;
+  }
+
+  // ---------- Voz (síntesis de texto a voz del dispositivo) ----------
+  function resetSpeakButtons() {
+    forEachEl(app.querySelectorAll('.btn-speak.speaking'), function (b) {
+      b.classList.remove('speaking'); b.textContent = '🔊 Escuchar';
+    });
+  }
+  function handleSpeak(btn) {
+    if (!('speechSynthesis' in window)) return;
+    var key = btn.getAttribute('data-key');
+    var content = app.querySelector('.section-content[data-hlkey="' + key + '"]');
+    if (!content) return;
+    var synth = window.speechSynthesis;
+    var wasSpeaking = btn.classList.contains('speaking');
+    synth.cancel();
+    resetSpeakButtons();
+    if (wasSpeaking) return;
+    var texto = stripHtml(content.innerHTML);
+    if (!texto.trim()) return;
+    var utter = new SpeechSynthesisUtterance(texto);
+    utter.lang = 'es-ES';
+    utter.rate = 0.95;
+    utter.onend = function () { btn.classList.remove('speaking'); btn.textContent = '🔊 Escuchar'; };
+    utter.onerror = function () { btn.classList.remove('speaking'); btn.textContent = '🔊 Escuchar'; };
+    btn.classList.add('speaking');
+    btn.textContent = '⏸ Detener';
+    synth.speak(utter);
+  }
+
+  // ---------- Copiar al portapapeles ----------
+  function fallbackCopy(texto) {
+    var ta = document.createElement('textarea');
+    ta.value = texto;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try { document.execCommand('copy'); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  function handleCopy(btn) {
+    var key = btn.getAttribute('data-key');
+    var content = app.querySelector('.section-content[data-hlkey="' + key + '"]');
+    if (!content) return;
+    var texto = stripHtml(content.innerHTML);
+    function showCopied() {
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(function () { btn.textContent = '📋 Copiar'; btn.classList.remove('copied'); }, 1400);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(showCopied).catch(function () { fallbackCopy(texto); showCopied(); });
+    } else {
+      fallbackCopy(texto); showCopied();
+    }
+  }
+
+  // ---------- Paleta flotante para resaltar texto seleccionado ----------
+  var hlToolbar = el(
+    '<div class="hl-toolbar" hidden>' +
+      '<button type="button" class="hl-swatch hl-amarillo" data-color="hl-amarillo" aria-label="Resaltar amarillo"></button>' +
+      '<button type="button" class="hl-swatch hl-verde" data-color="hl-verde" aria-label="Resaltar verde"></button>' +
+      '<button type="button" class="hl-swatch hl-azul" data-color="hl-azul" aria-label="Resaltar azul"></button>' +
+      '<button type="button" class="hl-swatch hl-rosa" data-color="hl-rosa" aria-label="Resaltar rosa"></button>' +
+    '</div>'
+  );
+  document.body.appendChild(hlToolbar);
+  var hlTargetKey = null;
+
+  function hideHlToolbar() { hlToolbar.hidden = true; hlTargetKey = null; }
+  function showHlToolbarNear(range) {
+    var rect;
+    try { rect = range.getBoundingClientRect(); } catch (e) { hideHlToolbar(); return; }
+    if (!rect || (rect.width === 0 && rect.height === 0)) { hideHlToolbar(); return; }
+    hlToolbar.hidden = false;
+    var top = rect.top - 50;
+    if (top < 8) top = rect.bottom + 10;
+    var left = rect.left + rect.width / 2 - 82;
+    if (left < 8) left = 8;
+    var maxLeft = window.innerWidth - 172;
+    if (left > maxLeft) left = maxLeft;
+    hlToolbar.style.top = top + 'px';
+    hlToolbar.style.left = left + 'px';
+  }
+  var selTimer = null;
+  document.addEventListener('selectionchange', function () {
+    clearTimeout(selTimer);
+    selTimer = setTimeout(function () {
+      var sel = window.getSelection();
+      if (!sel || sel.isCollapsed || sel.rangeCount === 0) { hideHlToolbar(); return; }
+      var range = sel.getRangeAt(0);
+      var node = range.commonAncestorContainer;
+      var elm = node.nodeType === 3 ? node.parentElement : node;
+      var contentEl = closestClass(elm, 'section-content');
+      if (!contentEl) { hideHlToolbar(); return; }
+      hlTargetKey = contentEl.getAttribute('data-hlkey');
+      showHlToolbarNear(range);
+    }, 180);
+  });
+  hlToolbar.addEventListener('mousedown', function (e) { e.preventDefault(); });
+  hlToolbar.addEventListener('click', function (e) {
+    var btn = e.target;
+    while (btn && btn !== hlToolbar && btn.tagName !== 'BUTTON') btn = btn.parentElement;
+    if (!btn || btn === hlToolbar) return;
+    var color = btn.getAttribute('data-color');
+    var sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      var range = sel.getRangeAt(0);
+      try {
+        var mark = document.createElement('mark');
+        mark.className = 'hl ' + color;
+        range.surroundContents(mark);
+      } catch (err) {
+        try {
+          var frag = range.extractContents();
+          var mark2 = document.createElement('mark');
+          mark2.className = 'hl ' + color;
+          mark2.appendChild(frag);
+          range.insertNode(mark2);
+        } catch (err2) { /* selección no soportada; se ignora */ }
+      }
+      sel.removeAllRanges();
+    }
+    if (hlTargetKey) persistSection(hlTargetKey);
+    hideHlToolbar();
+  });
+
   // ---------- Views ----------
   function renderHome(filterText) {
     titleEl.innerHTML = 'תְּהִלִּים <span>Tehilim</span>';
@@ -139,10 +299,18 @@
     s.sections.forEach(function (sec, i) {
       var cls = SECTION_CLASS[sec.title] || '';
       var open = SECTION_OPEN_DEFAULT[sec.title] ? ' open' : '';
+      var key = s.id + '::' + i;
+      var bodyHtml = HL[key] !== undefined ? HL[key] : sec.html;
       html += '<details class="accordion"' + open + '>' +
         '<summary><span class="diamond">◆</span> ' + sec.title +
         '<svg class="chev" viewBox="0 0 24 24"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>' +
-        '<div class="accordion__body ' + cls + '">' + sec.html + '</div>' +
+        '<div class="accordion__body ' + cls + '">' +
+          '<div class="section-toolbar">' +
+            '<button type="button" class="mini-btn btn-speak" data-key="' + key + '">🔊 Escuchar</button>' +
+            '<button type="button" class="mini-btn btn-copy" data-key="' + key + '">📋 Copiar</button>' +
+          '</div>' +
+          '<div class="section-content" data-hlkey="' + key + '">' + bodyHtml + '</div>' +
+        '</div>' +
         '</details>';
     });
 
@@ -176,6 +344,8 @@
   function render() {
     closeMenu();
     searchBar.hidden = true;
+    if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+    hideHlToolbar();
     var hash = location.hash || '#/';
     var m;
     if ((m = hash.match(/^#\/salmo\/(.+)$/))) {
@@ -205,6 +375,24 @@
     if (history.length > 1) history.back(); else navigate('home');
   });
 
+  // ---------- Clics dentro del contenido: escuchar, copiar, quitar resaltado ----------
+  app.addEventListener('click', function (e) {
+    var target = e.target;
+    var speakBtn = closestClass(target, 'btn-speak');
+    if (speakBtn) { handleSpeak(speakBtn); return; }
+    var copyBtn = closestClass(target, 'btn-copy');
+    if (copyBtn) { handleCopy(copyBtn); return; }
+    var markEl = closestMarkHl(target);
+    if (markEl) {
+      var key = findHlKey(markEl);
+      var parent = markEl.parentNode;
+      while (markEl.firstChild) parent.insertBefore(markEl.firstChild, markEl);
+      parent.removeChild(markEl);
+      persistSection(key);
+      return;
+    }
+  });
+
   // ---------- Search ----------
   btnSearch.addEventListener('click', function () {
     if (location.hash !== '#/' && location.hash !== '') { location.hash = '#/'; }
@@ -223,6 +411,16 @@
 
   // ---------- Initial render ----------
   render();
+
+  // ---------- Splash screen ----------
+  var splash = document.getElementById('splash');
+  if (splash) {
+    var hideSplash = function () {
+      splash.classList.add('splash--hide');
+      setTimeout(function () { if (splash.parentNode) splash.parentNode.removeChild(splash); }, 550);
+    };
+    setTimeout(hideSplash, 1400);
+  }
 
   // ---------- Service worker ----------
   if ('serviceWorker' in navigator) {
