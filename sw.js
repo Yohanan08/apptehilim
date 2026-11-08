@@ -1,4 +1,4 @@
-var CACHE_NAME = 'tehilim-v5';
+var CACHE_NAME = 'tehilim-v6-tarjetas';
 var ASSETS = [
   './',
   './index.html',
@@ -6,6 +6,18 @@ var ASSETS = [
   './css/style.css',
   './js/app.js',
   './data/data.js',
+  './data/cards.js',
+  './js/share.js',
+  './fonts/cormorant-garamond-latin-500-normal.woff2',
+  './fonts/cormorant-garamond-latin-600-normal.woff2',
+  './fonts/cormorant-garamond-latin-700-normal.woff2',
+  './fonts/cormorant-garamond-latin-500-italic.woff2',
+  './fonts/cormorant-garamond-latin-600-italic.woff2',
+  './fonts/montserrat-latin-500-normal.woff2',
+  './fonts/montserrat-latin-600-normal.woff2',
+  './fonts/montserrat-latin-700-normal.woff2',
+  './fonts/frank-ruhl-libre-hebrew-500-normal.woff2',
+  './fonts/frank-ruhl-libre-hebrew-700-normal.woff2',
   './img/logo.png',
   './icons/icon-192.png',
   './icons/icon-512.png',

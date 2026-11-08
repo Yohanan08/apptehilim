@@ -50,6 +50,26 @@ todo — los 155 Salmos completos — sigue funcionando.
 
 ## 3. Qué tiene la app
 
+### Novedad: Tarjetas de colores para compartir
+- Cada Salmo se abre ahora en **tarjetas de colores** (pestaña *Tarjetas*): porciones cortas de 1 a 3
+  versículos, y cada una con su línea **"En Yeshúa HaMashíaj"** tomada del propio estudio.
+  1.097 tarjetas en total; cada tarjeta y cada Salmo empiezan en un color distinto.
+- **Agrandar**: toca la tarjeta → vista ampliada, con A−/A+ para el tamaño de letra y deslizar para
+  pasar a la siguiente.
+- **Compartir / Imagen / Enlace**: cada tarjeta se comparte como imagen 1080×1350 (formato para
+  WhatsApp, Instagram y Facebook), lleva el enlace directo a esa tarjeta en https://apptehilim.vercel.app/ (`#/salmo/23/t/2`).
+- **Descargar Salmo (PDF)**: todas las tarjetas del Salmo en un PDF, en el tema de color elegido:
+  *Arcoíris*, *Real* (azul y oro), *Pergamino* o *Aurora*.
+- **Firma** al final de cada Salmo (en la app, en el PDF y en el pie de cada imagen):
+  *Yohanan ben Israel — compañero de labores en Adonai Yeshúa Melej HaMashíaj* ·
+  *Yeshúa — La Torá Viviente, Ministerio Judío Mesiánico*.
+- **Porción del día** en la pantalla de inicio.
+- La pestaña *Estudio completo* conserva todo lo anterior (hebreo, fonética, voz, copiar, resaltado).
+
+Si cambias `data/data.js`, regenera las tarjetas con:
+`node tools/build-cards.js data/data.js data/cards.js`
+
+
 - **Índice de Salmos** agrupado por los 5 libros tradicionales de Tehilim + Salmos de Qumrán, con buscador
   (por número o por palabra, busca en todo el contenido).
 - **Vista de cada Salmo** con las 10 secciones de tu documento en acordeón (el texto hebreo, la fonética y
@@ -71,6 +91,10 @@ sw.js              service worker: guarda todo en caché para el modo sin conexi
 css/style.css      estilos
 js/app.js          toda la lógica de la app
 data/data.js       el contenido completo de los 155 Salmos (extraído de tu Word)
+data/cards.js      las porciones cortas de cada Salmo + conexión con Yeshúa (generado)
+js/share.js        dibujo de imágenes, PDF y compartir (sin internet)
+fonts/             tipografías incluidas (Cormorant Garamond, Montserrat, Frank Ruhl Libre — licencia OFL)
+tools/             script que genera data/cards.js
 img/logo.png       tu logo del ministerio
 icons/             íconos de la app para el celular
 ```

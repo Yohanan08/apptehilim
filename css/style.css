@@ -225,3 +225,160 @@ mark.hl-rosa{ background:#f3a6c6; }
 @media (min-width:720px){
   main{max-width:760px; margin:0 auto;}
 }
+
+/* ================= Tarjetas de colores ================= */
+@font-face{font-family:"Cormorant Garamond";font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/cormorant-garamond-latin-500-normal.woff2) format("woff2");}
+@font-face{font-family:"Cormorant Garamond";font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/cormorant-garamond-latin-600-normal.woff2) format("woff2");}
+@font-face{font-family:"Cormorant Garamond";font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/cormorant-garamond-latin-700-normal.woff2) format("woff2");}
+@font-face{font-family:"Cormorant Garamond";font-style:italic;font-weight:500;font-display:swap;src:url(../fonts/cormorant-garamond-latin-500-italic.woff2) format("woff2");}
+@font-face{font-family:"Cormorant Garamond";font-style:italic;font-weight:600;font-display:swap;src:url(../fonts/cormorant-garamond-latin-600-italic.woff2) format("woff2");}
+@font-face{font-family:Montserrat;font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/montserrat-latin-500-normal.woff2) format("woff2");}
+@font-face{font-family:Montserrat;font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/montserrat-latin-600-normal.woff2) format("woff2");}
+@font-face{font-family:Montserrat;font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/montserrat-latin-700-normal.woff2) format("woff2");}
+@font-face{font-family:"Frank Ruhl Libre";font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/frank-ruhl-libre-hebrew-500-normal.woff2) format("woff2");unicode-range:U+0590-05FF,U+FB1D-FB4F;}
+@font-face{font-family:"Frank Ruhl Libre";font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/frank-ruhl-libre-hebrew-700-normal.woff2) format("woff2");unicode-range:U+0590-05FF,U+FB1D-FB4F;}
+
+:root{
+  --card-serif:"Cormorant Garamond", "Frank Ruhl Libre", Georgia, serif;
+  --card-sans:Montserrat, var(--sans);
+}
+body.no-scroll{overflow:hidden;}
+
+/* Índice: mosaicos de colores */
+.tile{
+  background:linear-gradient(150deg,var(--t-a,#132747),var(--t-b,#0b1a30));
+  color:#fffaf0; border:1px solid rgba(240,210,138,.55);
+  box-shadow:0 2px 6px rgba(11,26,48,.18);
+  font-family:var(--card-sans);
+}
+.tile:active{background:var(--gold); color:var(--navy);}
+.daily{padding:1rem 1rem 0;}
+.salmo-head__heb{font-family:"Frank Ruhl Libre", var(--hebrew); color:var(--gold); font-size:.85em; margin-inline-start:.4rem;}
+
+/* Pestañas */
+.tabs{display:flex; gap:.4rem; padding:.85rem 1rem .25rem; position:sticky; top:calc(var(--bar-h) + var(--safe-top)); z-index:10; background:var(--ivory);}
+.tab{
+  flex:1; text-align:center; text-decoration:none; font-family:var(--card-sans); font-weight:600; font-size:.88rem;
+  padding:.6rem .5rem; border-radius:999px; color:var(--navy); border:1.5px solid var(--gold); background:var(--ivory);
+}
+.tab.is-on{background:var(--navy); color:var(--gold-2); border-color:var(--navy);}
+
+/* Herramientas */
+.cards-tools{padding:.6rem 1rem .4rem;}
+.cards-tools__lead{font-family:var(--sans); color:#5b6170; font-size:.86rem; margin:.2rem 0 .7rem;}
+.themes{display:flex; gap:.4rem; overflow-x:auto; padding-bottom:.2rem; scrollbar-width:none;}
+.themes::-webkit-scrollbar{display:none;}
+.theme-chip{
+  flex:none; display:flex; align-items:center; gap:.4rem; font-family:var(--card-sans); font-size:.78rem; font-weight:600;
+  padding:.4rem .75rem .4rem .45rem; border-radius:999px; border:1.5px solid var(--line); background:#fff; color:var(--navy); cursor:pointer;
+}
+.theme-chip i{width:1.15rem; height:1.15rem; border-radius:50%; display:block; border:1px solid rgba(0,0,0,.1);}
+.theme-chip--arcoiris i{background:conic-gradient(#1f4aa8,#6d28d9,#be1e68,#b4232f,#b8620b,#4f7a12,#0f8a66,#0b7f9c,#1f4aa8);}
+.theme-chip--real i{background:linear-gradient(135deg,#132747 55%,#e2c17a 55%);}
+.theme-chip--pergamino i{background:linear-gradient(135deg,#fbf6ea 55%,#9a7a32 55%);}
+.theme-chip--aurora i{background:linear-gradient(135deg,#6d28d9,#be1e68,#0b7f9c);}
+.theme-chip.is-on{border-color:var(--navy); background:var(--navy); color:var(--gold-2);}
+.cards-tools__row{display:flex; gap:.5rem; margin-top:.75rem; flex-wrap:wrap;}
+.btn-gold,.btn-outline{
+  display:inline-flex; align-items:center; gap:.4rem; font-family:var(--card-sans); font-weight:600; font-size:.85rem;
+  border-radius:999px; padding:.62rem 1rem; cursor:pointer;
+}
+.btn-gold{background:linear-gradient(135deg,#e2c17a,#bfa15f); color:var(--navy); border:none; box-shadow:0 2px 8px rgba(191,161,95,.4);}
+.btn-outline{background:transparent; color:var(--navy); border:1.5px solid var(--navy);}
+.btn-gold svg{width:1.05rem; height:1.05rem;}
+.is-busy{opacity:.7; pointer-events:none;}
+
+/* Tarjeta */
+.cards-list{display:grid; gap:1rem; padding:.9rem 1rem 1.2rem;}
+@media (min-width:720px){ .cards-list{grid-template-columns:1fr 1fr;} }
+.pcard{
+  --c-ink:#fffaf0; --c-panel:rgba(0,0,0,.24);
+  position:relative; border-radius:20px; overflow:hidden; color:var(--c-ink);
+  background:var(--c-bg); box-shadow:0 8px 22px rgba(11,26,48,.22);
+  display:flex; flex-direction:column; text-decoration:none;
+}
+.pcard::before{ /* marco interior oro */
+  content:""; position:absolute; inset:8px; border:1px solid var(--c-accent); opacity:.5; border-radius:14px; pointer-events:none;
+}
+.pcard::after{ /* brillo */
+  content:""; position:absolute; right:-30%; top:-40%; width:80%; height:80%; pointer-events:none;
+  background:radial-gradient(closest-side,rgba(255,255,255,.18),rgba(255,255,255,0));
+}
+.pcard--light::after{background:radial-gradient(closest-side,rgba(255,255,255,.7),rgba(255,255,255,0));}
+.pcard__body{
+  all:unset; box-sizing:border-box; display:block; cursor:pointer; padding:1.25rem 1.3rem 1rem; position:relative; z-index:1;
+  color:var(--c-ink); text-align:center;
+}
+.pcard__body:focus-visible{outline:2px solid var(--c-accent); outline-offset:-6px; border-radius:16px;}
+.pcard__head{display:flex; justify-content:center; align-items:center; position:relative; margin-bottom:.55rem;}
+.pcard__ref{font-family:var(--card-sans); font-weight:700; font-size:.7rem; letter-spacing:.18em; color:var(--c-accent);}
+.pcard__num{position:absolute; right:0; font-family:var(--card-sans); font-size:.66rem; opacity:.75;}
+.pcard__heb{font-family:"Frank Ruhl Libre", var(--hebrew); font-size:1.5rem; color:var(--c-accent); line-height:1.3; margin-bottom:.2rem;}
+.pcard__verse{font-family:var(--card-serif); font-weight:600; font-size:1.28em; line-height:1.38; margin:.2rem 0 1rem;}
+.pcard__yeshua{background:var(--c-panel); border:1px solid color-mix(in srgb, var(--c-accent) 55%, transparent); border-radius:14px; padding:.7rem .9rem .75rem;}
+.pcard__yeshua span{display:block; font-family:var(--card-sans); font-weight:700; font-size:.62rem; letter-spacing:.16em; color:var(--c-accent); text-transform:uppercase; margin-bottom:.3rem;}
+.pcard__yeshua p{margin:0; font-family:var(--card-serif); font-style:italic; font-weight:500; font-size:1.06em; line-height:1.4;}
+.pcard__actions{
+  position:relative; z-index:1; display:grid; grid-template-columns:repeat(4,1fr);
+  border-top:1px solid color-mix(in srgb, var(--c-accent) 40%, transparent); margin:0 8px 8px;
+}
+.pcard__actions button{
+  background:none; border:none; color:var(--c-ink); font-family:var(--card-sans); font-size:.66rem; font-weight:600;
+  display:flex; flex-direction:column; align-items:center; gap:.2rem; padding:.6rem .2rem .45rem; cursor:pointer; opacity:.92;
+}
+.pcard__actions button svg{width:1.15rem; height:1.15rem; color:var(--c-accent);}
+.pcard__actions button:active{opacity:.6;}
+.pcard__cta{margin-top:.8rem; font-family:var(--card-sans); font-size:.75rem; font-weight:700; color:var(--c-accent); letter-spacing:.06em;}
+.pcard--daily .pcard__verse{font-size:1.18em;}
+.pcard__sig{margin-top:1.2rem; padding-top:.8rem; border-top:1px solid color-mix(in srgb, var(--c-accent) 45%, transparent); font-family:var(--card-serif); font-size:.95em; line-height:1.45; opacity:.92;}
+.pcard__sig b{font-family:var(--card-sans); font-size:.68em; letter-spacing:.14em; color:var(--c-accent); text-transform:uppercase;}
+
+/* Firma al final de cada Salmo */
+.firma{
+  margin:1.4rem 1rem .4rem; padding:1.3rem 1.1rem 1.4rem; border-radius:20px; text-align:center;
+  background:linear-gradient(160deg,#132747,#070f1d); color:#fffaf0; box-shadow:0 8px 22px rgba(11,26,48,.25);
+  border:1px solid rgba(226,193,122,.5);
+}
+.firma__logo{width:100%; max-width:520px; height:auto; border-radius:8px; display:block; margin:0 auto;}
+.firma__star{color:#e2c17a; font-size:1.4rem; margin:.7rem 0 .2rem;}
+.firma__name{font-family:var(--card-serif); font-weight:700; font-size:1.55rem; margin:0;}
+.firma__role{font-family:var(--card-serif); font-style:italic; font-size:1.12rem; margin:.15rem 0 .8rem; color:rgba(255,250,240,.85);}
+.firma__min{font-family:var(--card-sans); font-weight:700; letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; color:#e2c17a; margin:0;}
+.firma__min small{font-weight:600; font-size:.9em; letter-spacing:.12em;}
+
+/* Vista ampliada */
+.zoom{
+  position:fixed; inset:0; z-index:60; display:flex; flex-direction:column;
+  background:rgba(7,13,26,.94); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
+  padding:calc(.5rem + var(--safe-top)) .75rem calc(.75rem + env(safe-area-inset-bottom,0px));
+  animation:zoom-in .18s ease-out;
+}
+@keyframes zoom-in{from{opacity:0; transform:scale(.98);} to{opacity:1; transform:none;}}
+.zoom__top,.zoom__nav{display:flex; align-items:center; gap:.4rem; color:#f0d28a;}
+.zoom__count{flex:1; text-align:center; font-family:var(--card-sans); font-size:.8rem; font-weight:600; color:#e9dfc8;}
+.zoom__btn{
+  min-width:2.6rem; height:2.6rem; border-radius:999px; border:1px solid rgba(240,210,138,.45); background:rgba(255,255,255,.06);
+  color:#f0d28a; font-family:var(--card-sans); font-weight:700; font-size:.85rem; display:flex; align-items:center; justify-content:center; cursor:pointer; padding:0 .55rem;
+}
+.zoom__btn svg{width:1.2rem; height:1.2rem;}
+.zoom__btn:disabled{opacity:.3;}
+.zoom__stage{flex:1; overflow-y:auto; display:flex; align-items:flex-start; justify-content:center; padding:.8rem 0;}
+.zoom__stage .pcard{width:100%; max-width:640px; margin:auto 0;}
+.pcard--big .pcard__body{cursor:default; padding:1.8rem 1.5rem 1.4rem;}
+.pcard--big .pcard__verse{font-size:1.6em;}
+.pcard--big .pcard__yeshua p{font-size:1.2em;}
+.pcard--big .pcard__heb{font-size:2rem;}
+.zoom__nav{justify-content:space-between;}
+.zoom__act{
+  flex:1; height:2.6rem; border-radius:999px; border:none; background:linear-gradient(135deg,#e2c17a,#bfa15f);
+  color:#0b1a30; font-family:var(--card-sans); font-weight:700; font-size:.74rem; cursor:pointer; padding:0 .3rem;
+}
+.zoom__act[data-z="study"]{background:transparent; color:#f0d28a; border:1px solid rgba(240,210,138,.55);}
+
+.toast{
+  position:fixed; left:50%; bottom:1.4rem; transform:translateX(-50%); z-index:80;
+  background:#0b1a30; color:#f0d28a; font-family:var(--card-sans); font-size:.82rem; font-weight:600;
+  padding:.6rem 1rem; border-radius:999px; box-shadow:0 6px 18px rgba(0,0,0,.35); border:1px solid rgba(240,210,138,.4);
+}
+.pager{padding-bottom:1rem;}
+[hidden]{display:none !important;}
