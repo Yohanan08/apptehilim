@@ -1,4 +1,4 @@
-var CACHE_NAME = 'tehilim-v6-tarjetas';
+var CACHE_NAME = 'tehilim-v7-oro';
 var ASSETS = [
   './',
   './index.html',

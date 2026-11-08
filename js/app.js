@@ -272,8 +272,7 @@
       html += '<section class="book-group"><h2 class="book-group__title">' + g.title + '</h2><div class="grid">';
       g.items.forEach(function (s) {
         var isQ = isNaN(parseInt(s.id, 10));
-        var tc = SH.colorFor(s._index);
-        html += '<button class="tile' + (isQ ? ' qumran' : '') + '" style="--t-a:' + tc.a + ';--t-b:' + tc.b + '" data-id="' + s.id + '">' + s.id + '</button>';
+        html += '<button class="tile' + (isQ ? ' qumran' : '') + '" style="--d:' + (s._index % 10) + '" data-id="' + s.id + '">' + s.id + '</button>';
       });
       html += '</div></section>';
     });
